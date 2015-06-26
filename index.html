@@ -73,13 +73,13 @@
 //
 // var marker = L.marker([33.7946, -84.3246]).addTo(map);
 // var Col = L.marker([33.791485, -84.324273]).addTo(map);
-var circle = L.circle([33.792760, -84.324112], 10, {
-    color: 'red',
-    fillColor: '#f03',
-    fillOpacity: 0.5
-}).addTo(map);
-
-circle.bindPopup("This is Asbury Circle");
+// var circle = L.circle([33.792760, -84.324112], 10, {
+//     color: 'red',
+//     fillColor: '#f03',
+//     fillOpacity: 0.5
+// }).addTo(map);
+//
+// circle.bindPopup("This is Asbury Circle");
 //
 //     var polygon = L.polygon([
 //     [51.509, -0.08],
@@ -119,21 +119,6 @@ circle.bindPopup("This is Asbury Circle");
 //
 //
 //
-////GeoJSON
-//
-// var geojsonFeature = {"type": "Feature",
-//   "properties": {
-//       "name": "Coors Field",
-//       "amenity": "Baseball Stadium",
-//       "popupContent": "This is where the Rockies play!"
-//   },
-//   "geometry": {
-//       "type": "Point",
-//       "coordinates": [39.75621,-104.99404]
-//       }
-//   };
-//
-//
     //L.geoJson(geojsonFeature).addData(map);
     var myLayer = L.geoJson().addTo(map);
     // myLayer.addData(coorsLayer);
@@ -164,27 +149,30 @@ circle.bindPopup("This is Asbury Circle");
 
 //
 //
-L.geoJson(states, {
-    style: function(feature) {
-        switch (feature.properties.party) {
-            case 'Republican': return {color: "#ff0000"};
-            case 'Democrat':   return {color: "#0000ff"};
-        }
-    }
-}).addTo(map);
-//
+// L.geoJson(states, {
+//     style: function(feature) {
+//         switch (feature.properties.party) {
+//             case 'Republican': return {color: "#ff0000"};
+//             case 'Democrat':   return {color: "#0000ff"};
+//         }
+//     }
+// }).addTo(map);
+// //
 // L.geoJson(coorsField, {
 //     pointToLayer: function (feature, latlng) {
 //         return L.circleMarker([39.75621,-104.99404], geojsonMarkerOptions);
 //     },
 // }).addTo(map);
 
+
+
+
 L.geoJson(treeSpecimens, {
   pointToLayer: function (feature, latlng) {
     return L.marker(
       coordsToLatLng: function (coords){
         if(feature.properties.Tree_ID == 1){
-          return this.geometry.coordinates;
+          return feature.geometry.coordinates;
         }
       });
   },
