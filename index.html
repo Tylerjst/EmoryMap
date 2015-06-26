@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+  <link rel="stylesheet" type="text/css" href="style.css"/>
+  <script type ='text/javascript' src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+  <script type='text/javascript' src = '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+  <script type = 'text/javascript' src="geojson.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+
+<body>
+  <div id ="map" >
+
+
+  </div>
+
+
+  <script>
+      var map = L.map('map').setView([33.7925,-84.3205], 16);
+
+
+
+
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+        maxZoom: 18,
+        id: 'your.mapbox.project.id',
+        accessToken: 'your.mapbox.public.access.token'
+  }).addTo(map);
+
+
+//Current Location
+
+// map.locate({setView: true, maxZoom: 16});
+// //
+// function onLocationFound(e) {
+// var radius = e.accuracy / 2;
+//
+// L.marker(e.latlng).addTo(map).bindPopup("You are within " + radius + " meters from this point").openPopup();
+// L.circle(e.latlng, radius).addTo(map);
+// }
+//
+// map.on('locationfound', onLocationFound);
+//
+
+//Custom Icons
+//
+//
+// var LeafIcon = L.Icon.extend({
+//   options:{
+//     shadowUrl: 'leaf-shadow.png',
+//
+//     iconSize:     [38, 95], // size of the icon
+//     shadowSize:   [50, 64], // size of the shadow
+//     iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+//     shadowAnchor: [4, 62],  // the same for the shadow
+//     popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+//   }
+// });
+//
+//
+// var greenIcon = new LeafIcon({iconUrl :'leaf-green.png'}),
+//     redIcon = new LeafIcon({iconUrl: 'leaf-red.png'}),
+//     orangeIcon = new LeafIcon({iconUrl: 'leaf-orange.png'});
+//
+// L.marker([51.5, -0.09], {icon: greenIcon}).addTo(map).bindPopup("I am a green leaf.");
+// L.marker([51.495, -0.083], {icon: redIcon}).addTo(map).bindPopup("I am a red leaf.");
+// L.marker([51.49, -0.1], {icon: orangeIcon}).addTo(map).bindPopup("I am an orange leaf.");
+//
+// var marker = L.marker([33.7946, -84.3246]).addTo(map);
+// var Col = L.marker([33.791485, -84.324273]).addTo(map);
+var circle = L.circle([33.792760, -84.324112], 10, {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.5
+}).addTo(map);
+
+circle.bindPopup("This is Asbury Circle");
+//
+//     var polygon = L.polygon([
+//     [51.509, -0.08],
+//     [51.503, -0.06],
+//     [51.51, -0.047]
+//     ]).addTo(map);
+//
+    // Col.bindPopup("<b>This is supposed to be Denver</b>").openPopup();
+    // marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
+    // circle.bindPopup("I am a circle.");
+    // polygon.bindPopup("I am a polygon.");
+
+    // var popup = L.popup()
+    // .setLatLng([51.5, -0.09])
+    // .setContent("I am a standalone popup.")
+    // .openOn(map);
+
+//
+//
+//
+
+//     var popup = L.popup();
+//
+//       function onMapClick(e) {
+//           popup
+//               .setLatLng(e.latlng)
+//               .setContent("You clicked the map at " + e.latlng.toString())
+//               .openOn(map);
+//       }
+// //
+// //     map.on('click', redraw());
+//     map.on('click', onMapClick);
+// //
+// //
+//
+//
+//
+//
+//
+////GeoJSON
+//
+// var geojsonFeature = {"type": "Feature",
+//   "properties": {
+//       "name": "Coors Field",
+//       "amenity": "Baseball Stadium",
+//       "popupContent": "This is where the Rockies play!"
+//   },
+//   "geometry": {
+//       "type": "Point",
+//       "coordinates": [39.75621,-104.99404]
+//       }
+//   };
+//
+//
+    //L.geoJson(geojsonFeature).addData(map);
+    var myLayer = L.geoJson().addTo(map);
+    // myLayer.addData(coorsLayer);
+
+
+
+    // var myLines = [{
+    // "type": "LineString",
+    // "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
+    // }, {
+    //     "type": "LineString",
+    //     "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
+    // }];
+    //
+    // var myStyle = {
+    //     "color": "#ff7800",
+    //     "weight": 5,
+    //     "opacity": 0.65
+    // };
+    //
+    // L.geoJson(myLines, {
+    //     style: myStyle
+    // }).addTo(map);
+
+
+
+
+
+//
+//
+L.geoJson(states, {
+    style: function(feature) {
+        switch (feature.properties.party) {
+            case 'Republican': return {color: "#ff0000"};
+            case 'Democrat':   return {color: "#0000ff"};
+        }
+    }
+}).addTo(map);
+//
+// L.geoJson(coorsField, {
+//     pointToLayer: function (feature, latlng) {
+//         return L.circleMarker([39.75621,-104.99404], geojsonMarkerOptions);
+//     },
+// }).addTo(map);
+
+L.geoJson(treeSpecimens, {
+  pointToLayer: function (feature, latlng) {
+    return L.marker(
+      coordsToLatLng: function (coords){
+        if(feature.properties.Tree_ID == 1){
+          return this.geometry.coordinates;
+        }
+      });
+  },
+  onEachFeature: onEachFeature
+}).addTo(map);
+
+
+
+
+function onEachFeature(feature, layer) {
+    // does this feature have a property named popupContent?
+    if (feature.properties && feature.properties.Tree_Name) {
+        layer.bindPopup(feature.properties.Tree_Name + '</br>'+ feature.properties.Tree_Info);
+    }
+}
+
+
+
+
+
+
+
+
+  </script>
+
+
+
+
+
+
+
+
+
+
+</body>
