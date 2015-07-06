@@ -6,8 +6,9 @@
   <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
   <link rel="stylesheet" type="text/css" href="style.css"/>
   <script type ='text/javascript' src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
-  <script type='text/javascript' src = '//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
+  <script type='text/javascript' src = 'http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js'></script>
   <script type = 'text/javascript' src="geojson.js"></script>
+  <script src="js/leaflet.ajax.min.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 </head>
 
@@ -119,79 +120,86 @@
 //
 //
 //
-    //L.geoJson(geojsonFeature).addData(map);
     var myLayer = L.geoJson().addTo(map);
-    // myLayer.addData(coorsLayer);
 
 
 
-    // var myLines = [{
-    // "type": "LineString",
-    // "coordinates": [[-100, 40], [-105, 45], [-110, 55]]
-    // }, {
-    //     "type": "LineString",
-    //     "coordinates": [[-105, 40], [-110, 45], [-115, 55]]
-    // }];
-    //
-    // var myStyle = {
-    //     "color": "#ff7800",
-    //     "weight": 5,
-    //     "opacity": 0.65
-    // };
-    //
-    // L.geoJson(myLines, {
-    //     style: myStyle
-    // }).addTo(map);
 
 
 
+var treeUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Specimen_Tree_points&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
+//
+var civilUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Points&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
+//
+var civilTourUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Tour&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON"
+
+$.ajax(treeUrl,
+        { dataType: 'jsonp' }
+      ).done(function ( treeData ) {});
+
+$.ajax(civilUrl,
+         { dataType: 'jsonp' }
+      ).done(function ( civilData ) {});
+
+$.ajax(civilTourUrl,
+         { dataType: 'jsonp' }
+      ).done(function ( civilTourData ) {});
 
 
 //
-//
-// L.geoJson(states, {
-//     style: function(feature) {
-//         switch (feature.properties.party) {
-//             case 'Republican': return {color: "#ff0000"};
-//             case 'Democrat':   return {color: "#0000ff"};
-//         }
+// function processJSON(treeData){
+//   L.geoJson(treeData,{
+//     onEachFeature: onEachFeature,
+//     pointToLayer: function(feature,latlng){
+//       return L.marker(latlng);
 //     }
-// }).addTo(map);
-// //
-// L.geoJson(coorsField, {
-//     pointToLayer: function (feature, latlng) {
-//         return L.circleMarker([39.75621,-104.99404], geojsonMarkerOptions);
-//     },
-// }).addTo(map);
+//   }).addTo(map);
+// };
 
-
-
-
-L.geoJson(treeSpecimens, {
-  pointToLayer: function (feature, latlng) {
-    return L.marker(
-      coordsToLatLng: function (coords){
-        if(feature.properties.Tree_ID == 1){
-          return feature.geometry.coordinates;
-        }
-      });
-  },
-  onEachFeature: onEachFeature
-}).addTo(map);
-
-
-
-
-function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
-    if (feature.properties && feature.properties.Tree_Name) {
-        layer.bindPopup(feature.properties.Tree_Name + '</br>'+ feature.properties.Tree_Info);
+function processJSON(civilData){
+  L.geoJson(civilData,{
+    onEachFeature: onEachFeature,
+    pointToLayer: function(feature,latlng){
+      return L.marker(latlng);
     }
-}
+  }).addTo(map);
+};
+
+// function processJSON(civilTourData){
+//   L.geoJson(civilTourData).addTo(map);
+// };
 
 
+// function onEachFeature(feature, layer) {
+//     // does this feature have a property named popupContent?
+//     if (feature.properties && feature.properties.Tree_Name) {
+//       var popupContent1 = "<h2>" + feature.properties.Tree_Name + "</h2>";
+//       layer.bindPopup(popupContent1);
+//     } else if (feature.properties && feature.properties.Civil_Name){
+//       var popupContent2 = "<h2>" + feature.properties.Tree_Name + "</h2>";
+//       layer.bindPopup(popupContent2);
+//     }
+// };
 
+function onEachFeature(feature,layer){
+  if (feature.properties && feature.properties.Tree_Name){
+    var popupContent = "<h2>" + feature.properties.Tree_Name + "</h2>";
+    layer.bindPopup(popupContent);
+  } else if (feature.properties && feature.properties.Civil_Name){
+    var popupContent = "<h2>" + feature.properties.CivilName + "</h2>";
+    layer.bindPopup(popupContent);
+  }
+};
 
+// function onEachCivilFeature(feature,layer){
+//   var popupContent = "<h2>" + feature.properties.CivilName + "</h2>";
+//   layer.bindPopup(popupContent);
+// }
+
+// function onEachTourFeature(feature,layer){
+//   var popupContent = "<h2>" + feature.properties.Civil_Tour + "</h2>";
+//   layer.bindPopup(popupContent);
+// }
 
 
 
