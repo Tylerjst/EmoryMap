@@ -133,6 +133,9 @@ var civilUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainabilit
 //
 var civilTourUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Tour&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON"
 
+
+
+
 $.ajax(treeUrl,
         { dataType: 'jsonp' }
       ).done(function ( treeData ) {});
@@ -146,40 +149,25 @@ $.ajax(civilTourUrl,
       ).done(function ( civilTourData ) {});
 
 
-//
-// function processJSON(treeData){
-//   L.geoJson(treeData,{
-//     onEachFeature: onEachFeature,
-//     pointToLayer: function(feature,latlng){
-//       return L.marker(latlng);
-//     }
-//   }).addTo(map);
-// };
 
-function processJSON(civilData){
+function processJSON(treeData, civilData, civilTourData){
+  L.geoJson(treeData,{
+    onEachFeature: onEachFeature,
+    pointToLayer: function(feature,latlng){
+      return L.marker(latlng);
+    }
+  }).addTo(map);
   L.geoJson(civilData,{
     onEachFeature: onEachFeature,
     pointToLayer: function(feature,latlng){
       return L.marker(latlng);
     }
   }).addTo(map);
+  // L.geoJson(civilTourData).addTo(map);
 };
 
-// function processJSON(civilTourData){
-//   L.geoJson(civilTourData).addTo(map);
-// };
 
 
-// function onEachFeature(feature, layer) {
-//     // does this feature have a property named popupContent?
-//     if (feature.properties && feature.properties.Tree_Name) {
-//       var popupContent1 = "<h2>" + feature.properties.Tree_Name + "</h2>";
-//       layer.bindPopup(popupContent1);
-//     } else if (feature.properties && feature.properties.Civil_Name){
-//       var popupContent2 = "<h2>" + feature.properties.Tree_Name + "</h2>";
-//       layer.bindPopup(popupContent2);
-//     }
-// };
 
 function onEachFeature(feature,layer){
   if (feature.properties && feature.properties.Tree_Name){
@@ -191,13 +179,16 @@ function onEachFeature(feature,layer){
   }
 };
 
+
+
+
 // function onEachCivilFeature(feature,layer){
 //   var popupContent = "<h2>" + feature.properties.CivilName + "</h2>";
 //   layer.bindPopup(popupContent);
 // }
-
-// function onEachTourFeature(feature,layer){
-//   var popupContent = "<h2>" + feature.properties.Civil_Tour + "</h2>";
+//
+// function onEachTreeFeature(feature,layer){
+//   var popupContent = "<h2>" + feature.properties.Tree_Name + "</h2>";
 //   layer.bindPopup(popupContent);
 // }
 
