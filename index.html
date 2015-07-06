@@ -20,18 +20,18 @@
 
 
   <script>
-      var map = L.map('map').setView([33.7925,-84.3205], 16);
+      // var map = L.map('map').setView([33.7925,-84.3205], 16);
 
 
 
 
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
-        maxZoom: 18,
-        id: 'your.mapbox.project.id',
-        accessToken: 'your.mapbox.public.access.token'
-  }).addTo(map);
+  //     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  //       attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+  //       maxZoom: 18,
+  //       id: 'your.mapbox.project.id',
+  //       accessToken: 'your.mapbox.public.access.token'
+  // }).addTo(map);
 
 
 //Current Location
@@ -120,7 +120,7 @@
 //
 //
 //
-    var myLayer = L.geoJson().addTo(map);
+// var myLayer = L.geoJson().addTo(map);
 
 
 
@@ -128,12 +128,12 @@
 
 
 var treeUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Specimen_Tree_points&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
-//
+
 var civilUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Points&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
-//
-var civilTourUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Tour&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON"
 
+var civilTourUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Civil_Rights_Tour&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
 
+var carShareUrl = "http://geospatial.library.emory.edu:8081/geoserver/Sustainability_Map/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=Sustainability_Map:Car_Share_Points&maxFeatures=50&outputFormat=text%2Fjavascript&format_options=callback:processJSON";
 
 
 $.ajax(treeUrl,
@@ -148,22 +148,37 @@ $.ajax(civilTourUrl,
          { dataType: 'jsonp' }
       ).done(function ( civilTourData ) {});
 
+$.ajax(carShareUrl,
+          { dataType: 'jsonp' }
+      ).done(function ( carData ) {});
 
+var trees = L.layerGroup([]);
+var civil = L.layerGroup([]);
+var cars = L.layerGroup([]);
 
-function processJSON(treeData, civilData, civilTourData){
-  L.geoJson(treeData,{
+function processJSON(treeData, civilData, carsData){
+    trees.addLayer(L.geoJson(treeData,{
     onEachFeature: onEachFeature,
     pointToLayer: function(feature,latlng){
-      return L.marker(latlng);
-    }
-  }).addTo(map);
-  L.geoJson(civilData,{
+      // if(feature.properties && feature.properties.Tree_Name && (feature.geometry.type !== "MultiLineString"))
+          return L.marker(latlng);
+    //
+  }}));
+  civil.addLayer(L.geoJson(civilData,{
     onEachFeature: onEachFeature,
     pointToLayer: function(feature,latlng){
-      return L.marker(latlng);
+      if(feature.properties && feature.properties.Civil_Name)
+        return L.marker(latlng);
     }
-  }).addTo(map);
-  // L.geoJson(civilTourData).addTo(map);
+  }));
+  cars.addLayer(L.geoJson(carsData,{
+    onEachFeature: onEachFeature,
+    pointToLayer: function(feature,latlng){
+      if(feature.properties && feature.properties.CarShareIn)
+        return L.marker(latlng);
+    }
+  }));
+
 };
 
 
@@ -173,28 +188,36 @@ function onEachFeature(feature,layer){
   if (feature.properties && feature.properties.Tree_Name){
     var popupContent = "<h2>" + feature.properties.Tree_Name + "</h2>";
     layer.bindPopup(popupContent);
+
   } else if (feature.properties && feature.properties.Civil_Name){
-    var popupContent = "<h2>" + feature.properties.CivilName + "</h2>";
+    var popupContent = "<h2>" + feature.properties.Civil_Name + "</h2>";
+    layer.bindPopup(popupContent);
+  } else if (feature.properties && feature.properties.CarShareIn){
+    var popupContent = "<h2>" + feature.properties.CarShareIn + "</h2>";
     layer.bindPopup(popupContent);
   }
 };
 
 
+var grayscale = L.tileLayer('https:{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {id: 'your.mapbox.project.id', attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>'});
 
+var map = L.map('map', {
+  center: [33.7925,-84.3205],
+  zoom: 15,
+  layers: [grayscale]
+  });
 
-// function onEachCivilFeature(feature,layer){
-//   var popupContent = "<h2>" + feature.properties.CivilName + "</h2>";
-//   layer.bindPopup(popupContent);
-// }
-//
-// function onEachTreeFeature(feature,layer){
-//   var popupContent = "<h2>" + feature.properties.Tree_Name + "</h2>";
-//   layer.bindPopup(popupContent);
-// }
+  var baseMaps = {
+      "Grayscale": grayscale
+  };
+  var overlayMaps = {
+      "Trees": trees,
+      "Civil": civil,
+      "Cars": cars
 
+  };
 
-
-
+L.control.layers(null, overlayMaps).addTo(map);
   </script>
 
 
