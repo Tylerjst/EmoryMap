@@ -1,6 +1,63 @@
+OSI
+
+
+
+Drive
+.
+Folder Path
+My Drive
+Interns
+Sustainability Map (07/21)
+NEW
+Folders and views
+My DriveMy Drive
+Shared with meShared with me
+Google PhotosGoogle Photos
+RecentRecent
+StarredStarred
+TrashTrash
+Name
+Owner
+Last modified
+File size
+
+style.css
+me
+Aug 3, 2015me
+917 bytes
+Selected
+
+jquery.js
+me
+Aug 3, 2015me
+151 bytes
+Not selected
+
+index.html
+me
+Aug 3, 2015me
+20 KB
+Not selected
+
+geojson.js
+me
+Aug 3, 2015me
+8 KB
+Not selected
+Get Drive for Mac
+206 MB used (1%)
+Buy more storage
+
+
+style.css
+Open with
 #map{
   height:500px;
 
+}
+
+h2{
+  text-align: center;
 }
 
 body{
@@ -10,4 +67,44 @@ body{
 
 html, body, #map{
   height:100%;
+}
+.info {
+    padding: 6px 8px;
+    position: fixed;
+    bottom: 35px;
+    right: 9px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+    max-width: 35%;
+    white-space: normal;
+}
+.info h4 {
+    margin: 0 0 5px;
+    color: #777;
+}
+
+.legend{
+  padding: 6px 8px;
+  position: fixed;
+  bottom: 35px;
+  left: 9px;
+  font: 14px/16px Arial, Helvetica, sans-serif;
+  background: white;
+  background: rgba(255,255,255,0.8);
+  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+  border-radius: 5px;
+  max-width: 35%;
+  white-space: normal;
+  line-height: 18px;
+  color: #555;
+}
+.legend i {
+    width: 18px;
+    height: 18px;
+    float: left;
+    margin-right: 8px;
+    opacity: 0.7;
 }
